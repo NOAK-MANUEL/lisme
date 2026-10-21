@@ -10,7 +10,7 @@ import (
 type License struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
-	Reference string
+	Reference string `json:"reference"`
 }
 
 //go:embed licenses.jsonl texts/*
@@ -22,7 +22,6 @@ func listLicenses() {
 		panic(err)
 	}
 	defer file.Close()
-	var licenses []License
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -32,15 +31,12 @@ func listLicenses() {
 		if err != nil {
 			continue
 		}
-		licenses = append(licenses, license)
+		println(license.Name)
 	}
 	if err = scanner.Err(); err != nil {
 		panic(err)
 	}
 
-	for _, lis := range licenses {
-		println(lis.Name)
-	}
 }
 
 func searchLicense(id string) License {
@@ -49,13 +45,15 @@ func searchLicense(id string) License {
 		panic(err)
 	}
 	defer file.Close()
-	var license License
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		var license License
 
-		json.Unmarshal(scanner.Bytes(), &license)
+		if err := json.Unmarshal(scanner.Bytes(), &license); err != nil {
+			return License{}
+		}
 
-		if license.ID == strings.ToUpper(id) {
+		if strings.EqualFold(license.ID, id) {
 			return license
 		}
 	}

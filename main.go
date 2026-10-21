@@ -15,22 +15,11 @@ func main() {
 		fl.PrintDefaults()
 	}
 	list := fl.Bool("list", false, "List all licenses")
-	force := fl.Bool("force", false, "Force a license creation")
-	help := fl.Bool("help", false, "help")
+	force := fl.Bool("force", false, "Overwrite an existing LICENSE file")
 	search := fl.String("search", "", "List a license")
 
-	err := fl.Parse(os.Args[1:])
+	fl.Parse(os.Args[1:])
 
-	if err != nil {
-		println("Error parsing flags:", err)
-		fl.Usage()
-		return
-	}
-
-	if *help {
-		fl.Usage()
-		return
-	}
 	if *list {
 		listLicenses()
 		return
