@@ -24,20 +24,23 @@ func main() {
 		listLicenses()
 		return
 	}
-	if *search != "" && len(*search) >= 3 {
-		lis := searchLicense(*search)
-		if lis.ID == "" {
-			println("License not found")
-			return
-		}
-		fmt.Printf(
-			`
+	if *search != "" {
+		if len(*search) >= 3 {
+			lis := searchLicense(*search)
+			if lis.ID == "" {
+				println("License not found")
+				return
+			}
+			fmt.Printf(
+				`
 			Name: %s,
 			Reference: %s,
 		
 
 
 			`, lis.Name, lis.Reference)
+		}
+
 		return
 	}
 
