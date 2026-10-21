@@ -66,8 +66,12 @@ func main() {
 	_, err = os.Stat("LICENSE")
 
 	if errors.Is(err, os.ErrNotExist) || *force {
-		if err = os.WriteFile("LICENSE", data, 0644); err != nil {
+		mainData := []byte(lis.Name + "\n")
+		mainData = append(mainData, data...)
+		if err = os.WriteFile("LICENSE", mainData, 0644); err != nil {
 			println("Couldn't write file:", err)
+		} else {
+			println("Licensed Successfully")
 		}
 
 	} else if err != nil {
